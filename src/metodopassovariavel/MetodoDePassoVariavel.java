@@ -3,79 +3,99 @@ package metodopassovariavel;
 import java.math.BigDecimal;
 import java.util.List;
 
-public abstract class MetodoDePassoVariavel {
+public class MetodoDePassoVariavel {
 
-    public MetodoDePassoVariavel() {
+    private IFuncao funcao;
+    private Calculador calculador;
+    
+    public MetodoDePassoVariavel(IFuncao funcao) {
+        this.funcao = funcao;               
+        calculador = new Calculador(this.funcao);
     }
-
-    public final void comeca(List<Ponto> resposta,BigDecimal a,BigDecimal b,BigDecimal alfa,BigDecimal TOL,BigDecimal hmax,BigDecimal hmin){
+    
+    /**
+     * Executa o Método de passo variável de Runge-Kutta-Fehlberg
+     * @param resposta A lista com os pontos encontrados
+     * @param a limite inferior do intervalo
+     * @param b limite superior do intervalo
+     * @param alfa condição inicial
+     * @param TOL Tolerancia maxima (detalhar)
+     * @param hmax Tamanho máximo de passo
+     * @param hmin Tamanho mínimo de passo
+     */
+    public final List<Ponto> comeca(List<Ponto> resposta,BigDecimal a,BigDecimal b,BigDecimal alfa,BigDecimal TOL,BigDecimal hmax,BigDecimal hmin){
         
         boolean FLAG = true;
-        BigDecimal t,w,h,
+        BigDecimal t,w,h,r,sigma,
                    k1,k2,k3,k4,k5,k6;
-        
-        
         t= a;
         w=alfa;
-        h=hmax;
-                
+        h=hmax;                
         //SAIDA(t,w)
-        resposta.add(new Ponto<>(t,w,BigDecimal.ZERO));
-        
+        resposta.add(new Ponto<>(t,w,BigDecimal.ZERO));        
         while(FLAG){
             
-            k1=h.multiply(funcao(t, w));
-            k2=h.multiply(funcao(t.add(h.multiply(new BigDecimal(1/4))), w.add(k1.multiply(new BigDecimal(1/4)))));
-            k3=h.multiply(funcao(t.add(h.multiply(new BigDecimal(3/8))),w+(3/32)*k1+(9/32)*k2);
-            BigDecimal k4=h*funcao(t+(12/13)*h, w+(1932/2197)*k1-(7200/2197)*k2+(7296/2197)*k3);
-            BigDecimal k5=h*funcao(t+h, w+(439/216)*k1-(8)*k2+(3680/513)*k3-(845/4104)*k4);
-            BigDecimal k6=h*funcao(t+(1/2)*h, w-(8/27)*k1-(2)*k2+(3544/2565)*k3-(1859/4104)*k4-(11/44)*k5);
-
-            BigDecimal r=(1/h)*Math.abs((1/360)*k1-(128/4275)*k3-(2197/75240)*k4+(1/50)*k5+(2/55)*k6);
+            k1=calculador.K1(h, t, w);
+            k2=calculador.K2(h, t, w, k1);
+            k3=calculador.K3(h, t, w, k1, k2);
+            k4=calculador.K4(h, t, w, k1, k2, k3);
+            k5=calculador.K5(h, t, w, k1, k2, k3, k4);
+            k6=calculador.K6(h, t, w, k1, k2, k3, k4, k5);
             
-            if(r<=TOL){
-                t=t+h;
-                w=w+(25/216)*k1+(1408/2565)*k3+(2197/4104)*k4-(1/5)*k5;
+//            BigDecimal k4=h*funcao(t+(12/13)*h, w+(1932/2197)*k1-(7200/2197)*k2+(7296/2197)*k3);
+//            BigDecimal k5=h*funcao(t+h, w+(439/216)*k1-(8)*k2+(3680/513)*k3-(845/4104)*k4);
+//            BigDecimal k6=h*funcao(t+(1/2)*h, w-(8/27)*k1-(2)*k2+(3544/2565)*k3-(1859/4104)*k4-(11/44)*k5);
+
+            r = calculador.R(h, k1, k3, k4, k5, k6);
+            
+            //r<=TOL            
+            if(r.compareTo(TOL)<=0){
+                //Aproximação aceita
+                t = t.add(h);
+                w=calculador.W(h, w, k1, k3, k4, k5);
                 //SAIDA(t,w,h)
                 resposta.add(new Ponto(t,w,h));
-                imprime(resposta);
-                continue;
+               // imprime(resposta);
+                //continue;
             }
             
-            BigDecimal sigma=0.84*Math.pow((TOL/r),(1/4));
+            sigma= calculador.sigma(TOL, r);
             
-            if(sigma<=0.1){//CUIDADO
-                h=0.1*h;
+            //sigma <= 0.1
+            if(sigma.compareTo(BigDecimal.valueOf(0.1))<=0 ){
+                //h = h*0.1
+                h=h.multiply(BigDecimal.valueOf(0.1)); 
+            }else            
+            //sigma>=4 (estava 0.4, mas no algoritmo ta 4)
+            if(sigma.compareTo(BigDecimal.valueOf(4))>=0 ){
+                h=h.multiply(new BigDecimal(4)); 
+            }else{
+                //h=sigma*h;
+                h=h.multiply(sigma);                
             }
             
-            if(sigma>=0.4){
-                h=4*h;
+            //h>hmax
+            if(h.compareTo(hmax)>0) 
+                h=hmax;
+            
+            //t>=b
+            if(t.compareTo(b)>=0){               
+                FLAG=false;            
             }
-            else{
-                h=sigma*h;
+            //t+h>b
+            if(t.add(h).compareTo(b)>0) {
+                h=b.subtract(t);
             }
-            
-            if(h>hmax) h=hmax;
-            
-            if(t>=b){               
-                FLAG=false;
-            }
-            
-            if(t+h>b) h=b-t;
-            
-            if(h<hmin){
+            //h<hmin
+            if(h.compareTo(hmin)<0){
                 FLAG=false;
                 //Exibir mensagem de erro;
             }        
         }
+        return resposta;
     }
 
     //t=t e w=y
-    public abstract BigDecimal funcao(BigDecimal t,BigDecimal w);
-    
-    public void imprime(List<Ponto> pontos){
-        for(int i=0;i<pontos.size();i++){
-            System.out.println("T:"+pontos.get(i).getT()+" W:"+pontos.get(i).getW()+" H:"+pontos.get(i).getH());
-        }
-    }
+  //  public abstract BigDecimal funcao(BigDecimal t,BigDecimal w);
+
 }
