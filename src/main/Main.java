@@ -4,8 +4,8 @@ import java.math.BigDecimal;
 import java.util.LinkedList;
 import java.util.List;
 import metodopassovariavel.IFuncao;
-import metodopassovariavel2.MetodoDePassoVariavel;
-import metodopassovariavel2.Ponto;
+import metodopassovariavel.MetodoDePassoVariavel;
+import metodopassovariavel.Ponto;
 
 
 public class Main {
