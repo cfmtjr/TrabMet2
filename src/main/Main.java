@@ -1,11 +1,16 @@
 package main;
 
+import com.panayotis.gnuplot.JavaPlot;
+import com.panayotis.gnuplot.plot.AbstractPlot;
+import com.panayotis.gnuplot.style.PlotStyle;
+import com.panayotis.gnuplot.style.Style;
 import java.math.BigDecimal;
 import java.util.LinkedList;
 import java.util.List;
 import metodopassovariavel.IFuncao;
 import metodopassovariavel.MetodoDePassoVariavel;
 import metodopassovariavel.Ponto;
+import metodopassovariavel.ResultSet;
 
 
 public class Main {
@@ -23,8 +28,11 @@ public class Main {
                 new BigDecimal(1).divide(new BigDecimal(10).pow(5)), 
                 BigDecimal.valueOf(0.25), 
                 BigDecimal.valueOf(0.01));
-        imprime(pontos);
+        //imprime(pontos);
         
+        ResultSet result = new ResultSet(pontos);
+        plot(result);
+
         //Não apaguem, são alguns testes com bigDecimal, depois seria legal 
         //formalizar isso no doc
 //        BigDecimal i = new BigDecimal(5/4);
@@ -62,5 +70,14 @@ public class Main {
         for(int i=0;i<pontos.size();i++){
             System.out.println("T:"+pontos.get(i).getT()+" W:"+pontos.get(i).getW()+" H:"+pontos.get(i).getH());
         }
+    }
+    
+    public static void plot(ResultSet result){
+        JavaPlot p = new JavaPlot();
+        p.addPlot(result);
+        PlotStyle stl = ((AbstractPlot) p.getPlots().get(0)).getPlotStyle();
+        stl.setStyle(Style.LINESPOINTS);
+        stl.setPointSize(2);
+        p.plot();
     }
 }
