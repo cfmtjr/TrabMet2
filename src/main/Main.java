@@ -22,13 +22,13 @@ public class Main {
         MetodoDePassoVariavel metodo = new MetodoDePassoVariavel(funcao);
         
         pontos = metodo.comeca(pontos, 
-                new BigDecimal(0), 
-                new BigDecimal(2), 
+                new BigDecimal(1), 
+                new BigDecimal(10), 
                 BigDecimal.valueOf(0.5), 
                 new BigDecimal(1).divide(new BigDecimal(10).pow(5)), 
-                BigDecimal.valueOf(0.25), 
-                BigDecimal.valueOf(0.01));
-        //imprime(pontos);
+                BigDecimal.valueOf(0.5),//0.25), 
+                BigDecimal.valueOf(0.01));//0.01));
+        imprimeH(pontos);
         
         ResultSet result = new ResultSet(pontos);
         plot(result);
@@ -72,8 +72,14 @@ public class Main {
         }
     }
     
+    public static void imprimeH(List<Ponto> pontos){
+        for(int i=0;i<pontos.size();i++){
+            System.out.println("H:"+pontos.get(i).getH());
+        }
+    }
+    
     public static void plot(ResultSet result){
-        JavaPlot p = new JavaPlot();
+        JavaPlot p = new JavaPlot("C:\\Users\\Thadeu Jose\\Documents\\gnuplot\\bin\\wgnuplot.exe");
         p.addPlot(result);
         PlotStyle stl = ((AbstractPlot) p.getPlots().get(0)).getPlotStyle();
         stl.setStyle(Style.LINESPOINTS);
