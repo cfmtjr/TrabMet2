@@ -12,4 +12,6 @@ import java.math.BigDecimal;
  */
 public interface IFuncao {
     public BigDecimal calcula(BigDecimal x, BigDecimal y);    
+    @Override
+    public String toString();
 }

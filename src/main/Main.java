@@ -1,5 +1,6 @@
 package main;
 
+import PacoteGrafico.Pagina;
 import com.panayotis.gnuplot.JavaPlot;
 import com.panayotis.gnuplot.plot.AbstractPlot;
 import com.panayotis.gnuplot.style.PlotStyle;
@@ -16,23 +17,28 @@ import metodopassovariavel.ResultSet;
 public class Main {
 
     public static void main(String[] args) {
-        // TODO code application logic here
-        IFuncao funcao =new Exemplo1();
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new Pagina().setVisible(true);
+            }
+        });        
+
+        /*IFuncao funcao =new Exemplo1();
         List<Ponto> pontos = new LinkedList<>();
         MetodoDePassoVariavel metodo = new MetodoDePassoVariavel(funcao);
         
-        pontos = metodo.comeca(pontos, 
+        pontos = metodo.calcula(pontos, 
                 new BigDecimal(1), 
                 new BigDecimal(10), 
                 BigDecimal.valueOf(0.5), 
                 new BigDecimal(1).divide(new BigDecimal(10).pow(5)), 
                 BigDecimal.valueOf(0.5),//0.25), 
-                BigDecimal.valueOf(0.01));//0.01));
+                BigDecimal.valueOf(0.01),
+                BigDecimal.valueOf(0.4));//0.01));
         imprimeH(pontos);
         
         ResultSet result = new ResultSet(pontos);
-        plot(result);
-
+        plot(result);*/
         //Não apaguem, são alguns testes com bigDecimal, depois seria legal 
         //formalizar isso no doc
 //        BigDecimal i = new BigDecimal(5/4);
@@ -66,7 +72,7 @@ public class Main {
         
     }
         
-    public static void imprime(List<Ponto> pontos){
+    /*public static void imprime(List<Ponto> pontos){
         for(int i=0;i<pontos.size();i++){
             System.out.println("T:"+pontos.get(i).getT()+" W:"+pontos.get(i).getW()+" H:"+pontos.get(i).getH());
         }
@@ -79,11 +85,12 @@ public class Main {
     }
     
     public static void plot(ResultSet result){
-        JavaPlot p = new JavaPlot("C:\\Users\\Thadeu Jose\\Documents\\gnuplot\\bin\\wgnuplot.exe");
+        JavaPlot p = new JavaPlot("C:\\Users\\Administrador\\Documents\\gnuplot\\bin\\wgnuplot.exe");
         p.addPlot(result);
         PlotStyle stl = ((AbstractPlot) p.getPlots().get(0)).getPlotStyle();
         stl.setStyle(Style.LINESPOINTS);
         stl.setPointSize(2);
         p.plot();
-    }
+        
+    }*/
 }

@@ -8,7 +8,7 @@ import metodopassovariavel.IFuncao;
  * @author Thadeu Jose
  */
 
-public class Exemplo1 implements IFuncao{
+public  class Exemplo1 implements IFuncao{
 
     @Override
     public BigDecimal calcula(BigDecimal x, BigDecimal y) {
@@ -18,5 +18,10 @@ public class Exemplo1 implements IFuncao{
         return x.pow(3).add(x.pow(4).multiply(y));
         //sin(x^2)
         //return new BigDecimal(Math.sin(x.pow(2).doubleValue()));    
+    }
+    
+    @Override
+    public String toString(){
+        return "x^3+((x^4)*y)";
     }
 }
