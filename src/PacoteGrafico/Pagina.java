@@ -8,9 +8,16 @@ import com.panayotis.gnuplot.JavaPlot;
 import com.panayotis.gnuplot.plot.AbstractPlot;
 import com.panayotis.gnuplot.style.PlotStyle;
 import com.panayotis.gnuplot.style.Style;
+import java.awt.event.AdjustmentEvent;
+import java.awt.event.AdjustmentListener;
 import java.math.BigDecimal;
 import java.util.LinkedList;
 import java.util.List;
+import javax.swing.BoundedRangeModel;
+import javax.swing.JOptionPane;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.text.DefaultCaret;
 import main.Exemplo1;
 import metodopassovariavel.IFuncao;
 import metodopassovariavel.MetodoDePassoVariavel;
@@ -21,35 +28,46 @@ import metodopassovariavel.ResultSet;
  *
  * @author Administrador
  */
-public  class Pagina extends javax.swing.JFrame {
-    
+public class Pagina extends javax.swing.JFrame {
+
     private IFuncao funcao;
     private List<Ponto> pontos;
-    private MetodoDePassoVariavel metodo;    
-   
+    private MetodoDePassoVariavel metodo;
+    private Thread t;
+
     public Pagina() {
         funcao = new Exemplo1();
-        metodo = new MetodoDePassoVariavel(funcao);
-        
+
         initComponents();
-        jLabel4.setText("Função: "+funcao.toString());
+        jLabel4.setText("Função: " + funcao.toString());
     }
 
-    
-    public void log(final String mensagem){
-        
-        //Tentativa de criar thread para escrever 'simultaneamente'
-                
-        /*Thread t = new Thread(new Runnable(){
-            public void run(){               
-                jTextArea1.append("\n"+mensagem);
-            }
-        });        
-        t.start();
-        */        
-        jTextArea1.append("\n"+mensagem);
+    public void setPontos(List<Ponto> pontos) {
+        this.pontos = pontos;
     }
-    
+
+    public void mostrarErro(String mensagem, String titulo){
+        JOptionPane.showMessageDialog(null, mensagem, titulo, JOptionPane.ERROR_MESSAGE);
+    }
+    public void iniciarMetodo() {
+        try {
+            if (!t.isAlive()) {
+                t = new Thread(metodo);
+                t.start();
+            } else {
+                mostrarErro("O método já está executando, espere até que ele\n"
+                        + "termine para poder criar outra instância de execução.", "Método em execução");
+            }
+        } catch (NullPointerException e) {
+            t = new Thread(metodo);
+            t.start();
+        }
+    }
+
+    public void log(final String mensagem) {
+        jTextArea1.append("\n" + mensagem);
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -73,6 +91,7 @@ public  class Pagina extends javax.swing.JFrame {
         jLabel4 = new javax.swing.JLabel();
         jButton4 = new javax.swing.JButton();
         jButton5 = new javax.swing.JButton();
+        jButton6 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -107,9 +126,11 @@ public  class Pagina extends javax.swing.JFrame {
             }
         });
 
+        jTextArea1.setEditable(false);
         jTextArea1.setColumns(20);
         jTextArea1.setRows(5);
         jScrollPane1.setViewportView(jTextArea1);
+        makeTextAreaAutoScroll(jTextArea1);
 
         jButton3.setText("Gerar gráfico");
         jButton3.addActionListener(new java.awt.event.ActionListener() {
@@ -131,6 +152,13 @@ public  class Pagina extends javax.swing.JFrame {
         jButton5.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton5ActionPerformed(evt);
+            }
+        });
+
+        jButton6.setText("Limpar");
+        jButton6.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton6ActionPerformed(evt);
             }
         });
 
@@ -162,7 +190,8 @@ public  class Pagina extends javax.swing.JFrame {
                             .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addComponent(jButton4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jButton5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jButton6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -191,8 +220,10 @@ public  class Pagina extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton5)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButton6)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel4)
-                .addContainerGap(234, Short.MAX_VALUE))
+                .addContainerGap(199, Short.MAX_VALUE))
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jScrollPane1)
@@ -203,73 +234,109 @@ public  class Pagina extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        
-        //Obtém os H's e inicia a lista de pontos
-        Double valorHmax = Double.valueOf(jTextField1.getText()); 
-        BigDecimal hmax = BigDecimal.valueOf(valorHmax);
-        Double valorHmin = Double.valueOf(jTextField2.getText()); 
-        BigDecimal hmin = BigDecimal.valueOf(valorHmin);
-        Double valorH = Double.valueOf(jTextField3.getText()); 
-        BigDecimal h = BigDecimal.valueOf(valorH);        
-        pontos = new LinkedList<>();
-        
-        //Executa o método
-        pontos = metodo.calculaComLog(pontos, 
-        new BigDecimal(1), 
-        new BigDecimal(10), 
-        BigDecimal.valueOf(0.5), 
-        new BigDecimal(1).divide(new BigDecimal(10).pow(5)), 
-        hmax, hmin, h,this);
 
-        
+        //Obtém os H's e inicia a lista de pontos
+        Double valorHmax = Double.valueOf(jTextField1.getText());
+        BigDecimal hmax = BigDecimal.valueOf(valorHmax);
+        Double valorHmin = Double.valueOf(jTextField2.getText());
+        BigDecimal hmin = BigDecimal.valueOf(valorHmin);
+        Double valorH = Double.valueOf(jTextField3.getText());
+        BigDecimal h = BigDecimal.valueOf(valorH);
+        pontos = new LinkedList<>();
+
+        //Executa o método
+        metodo = new MetodoDePassoVariavel(funcao, pontos,
+                new BigDecimal(1),
+                new BigDecimal(10),
+                BigDecimal.valueOf(0.5),
+                new BigDecimal(1).divide(new BigDecimal(10).pow(5)),
+                hmax, hmin, h, this, true);
+        iniciarMetodo();
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
 
         //Obtém os H's e inicia a lista de pontos
-        Double valorHmax = Double.valueOf(jTextField1.getText()); 
+        Double valorHmax = Double.valueOf(jTextField1.getText());
         BigDecimal hmax = BigDecimal.valueOf(valorHmax);
-        Double valorHmin = Double.valueOf(jTextField2.getText()); 
+        Double valorHmin = Double.valueOf(jTextField2.getText());
         BigDecimal hmin = BigDecimal.valueOf(valorHmin);
-        Double valorH = Double.valueOf(jTextField3.getText()); 
+        Double valorH = Double.valueOf(jTextField3.getText());
         BigDecimal h = BigDecimal.valueOf(valorH);
-        log("Iniciando método.");
-         pontos = new LinkedList<>();
+        pontos = new LinkedList<>();
 
-         //Executa o método
-         pontos = metodo.calcula(pontos, 
-                new BigDecimal(1), 
-                new BigDecimal(10), 
-                BigDecimal.valueOf(0.5), 
-                new BigDecimal(1).divide(new BigDecimal(10).pow(5)), 
+        //Executa o método
+        metodo = new MetodoDePassoVariavel(funcao,
+                pontos,
+                new BigDecimal(1),
+                new BigDecimal(10),
+                BigDecimal.valueOf(0.5),
+                new BigDecimal(1).divide(new BigDecimal(10).pow(5)),
                 hmax,//0.25), 
                 hmin,
-                h);//0.01));
-         log("Método terminado.");
+                h,
+                this,
+                false);//0.01));
+        iniciarMetodo();
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextField1ActionPerformed
 
+
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         ResultSet result = new ResultSet(pontos);
-        plot(result);
+        try{
+            if (!t.isAlive()) {
+                plot(result);
+            } else {
+                mostrarErro("O método ainda está executando, espere até que ele\n"
+                        + "termine para poder plotar o gráfico.", "Método em execução");
+            }
+        }catch(NullPointerException e){
+            mostrarErro("Não existem pontos a serem plotados.\n"
+                    + "Execute o método para obter os resultados.", "Resultados não detectados");
+        }
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        for(int i=0;i<pontos.size();i++){
-            log("H:"+pontos.get(i).getH());
+        try{
+            if (!t.isAlive()) {
+                for (Ponto ponto : pontos) {
+                    log("H:" + ponto.getH());
+                }
+            } else {
+                mostrarErro("O método ainda está executando, espere até que ele\n"
+                        + "termine para poder mostrar os resultados.", "Método em execução");
+            }
+        } catch(NullPointerException e){
+            mostrarErro("Não existem resultados a serem mostrados.\n"
+                    + "Execute o método para obter mostrar os resultados.", "Resultados não detectados");
         }
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
-        for(int i=0;i<pontos.size();i++){
-            log("T:"+pontos.get(i).getT()+" W:"+pontos.get(i).getW()+" H:"+pontos.get(i).getH());
+        try{
+            if (!t.isAlive()) {
+                for (Ponto ponto : pontos) {
+                    log("T:" + ponto.getT() + " W:" + ponto.getW() + " H:" + ponto.getH());
+                }
+            } else {
+                mostrarErro("O método ainda está executando, espere até que ele\n"
+                        + "termine para poder mostrar os resultados.", "Método em execução");
+            }
+        } catch(NullPointerException e){
+            mostrarErro("Não existem resultados a serem mostrados.\n"
+                    + "Execute o método para poder mostrar os resultados.", "Resultados não detectados");
         }
     }//GEN-LAST:event_jButton5ActionPerformed
 
-   public static void plot(ResultSet result){
+    private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
+        jTextArea1.setText(null);
+    }//GEN-LAST:event_jButton6ActionPerformed
+
+    public static void plot(ResultSet result) {
         JavaPlot p = new JavaPlot("C:\\Users\\Administrador\\Documents\\gnuplot\\bin\\wgnuplot.exe");
         p.addPlot(result);
         PlotStyle stl = ((AbstractPlot) p.getPlots().get(0)).getPlotStyle();
@@ -277,13 +344,52 @@ public  class Pagina extends javax.swing.JFrame {
         stl.setPointSize(2);
         p.plot();
     }
-    
+
+    public static void makeTextAreaAutoScroll(JTextArea textArea) {
+
+        // Get the text area's scroll pane :
+        final JScrollPane scrollPane = (JScrollPane) (textArea.getParent().getParent());
+
+        // Disable the auto scroll :
+        ((DefaultCaret) textArea.getCaret()).setUpdatePolicy(DefaultCaret.NEVER_UPDATE);
+
+        // Add a listener to the vertical scroll bar :
+        scrollPane.getVerticalScrollBar().addAdjustmentListener(new AdjustmentListener() {
+
+            private int _val = 0;
+            private int _ext = 0;
+            private int _max = 0;
+
+            private final BoundedRangeModel _model = scrollPane.getVerticalScrollBar().getModel();
+
+            @Override
+            public void adjustmentValueChanged(AdjustmentEvent e) {
+
+                // Get the new max :
+                int newMax = _model.getMaximum();
+
+                // If the new max has changed and if we were scrolled to bottom :
+                if (newMax != _max && (_val + _ext == _max)) {
+
+                    // Scroll to bottom :
+                    _model.setValue(_model.getMaximum() - _model.getExtent());
+                }
+
+                // Save the new values :
+                _val = _model.getValue();
+                _ext = _model.getExtent();
+                _max = _model.getMaximum();
+            }
+        });
+    }
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
+    private javax.swing.JButton jButton6;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
