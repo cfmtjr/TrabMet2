@@ -42,6 +42,10 @@ public class Pagina extends javax.swing.JFrame {
         jLabel4.setText("Função: " + funcao.toString());
     }
 
+    public void terminarExecucao() {
+        jButton7.setEnabled(false);
+    }
+    
     public void setPontos(List<Ponto> pontos) {
         this.pontos = pontos;
     }
@@ -54,6 +58,7 @@ public class Pagina extends javax.swing.JFrame {
             if (!t.isAlive()) {
                 t = new Thread(metodo);
                 t.start();
+                jButton7.setEnabled(true);
             } else {
                 mostrarErro("O método já está executando, espere até que ele\n"
                         + "termine para poder criar outra instância de execução.", "Método em execução");
@@ -61,6 +66,7 @@ public class Pagina extends javax.swing.JFrame {
         } catch (NullPointerException e) {
             t = new Thread(metodo);
             t.start();
+            jButton7.setEnabled(true);
         }
     }
 
@@ -92,6 +98,7 @@ public class Pagina extends javax.swing.JFrame {
         jButton4 = new javax.swing.JButton();
         jButton5 = new javax.swing.JButton();
         jButton6 = new javax.swing.JButton();
+        jButton7 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -162,6 +169,14 @@ public class Pagina extends javax.swing.JFrame {
             }
         });
 
+        jButton7.setText("Parar execução");
+        jButton7.setEnabled(false);
+        jButton7.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton7ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -191,7 +206,8 @@ public class Pagina extends javax.swing.JFrame {
                     .addComponent(jButton4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jButton5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jButton6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jButton6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jButton7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -220,10 +236,12 @@ public class Pagina extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton5)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButton7)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton6)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel4)
-                .addContainerGap(199, Short.MAX_VALUE))
+                .addContainerGap(164, Short.MAX_VALUE))
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jScrollPane1)
@@ -287,14 +305,9 @@ public class Pagina extends javax.swing.JFrame {
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         ResultSet result = new ResultSet(pontos);
-        try{
-            if (!t.isAlive()) {
-                plot(result);
-            } else {
-                mostrarErro("O método ainda está executando, espere até que ele\n"
-                        + "termine para poder plotar o gráfico.", "Método em execução");
-            }
-        }catch(NullPointerException e){
+        if(t != null){
+            plot(result);
+        } else {
             mostrarErro("Não existem pontos a serem plotados.\n"
                     + "Execute o método para obter os resultados.", "Resultados não detectados");
         }
@@ -335,6 +348,10 @@ public class Pagina extends javax.swing.JFrame {
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
         jTextArea1.setText(null);
     }//GEN-LAST:event_jButton6ActionPerformed
+
+    private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
+        metodo.setFLAG(false);
+    }//GEN-LAST:event_jButton7ActionPerformed
 
     public static void plot(ResultSet result) {
         JavaPlot p = new JavaPlot("C:\\Users\\Administrador\\Documents\\gnuplot\\bin\\wgnuplot.exe");
@@ -390,6 +407,7 @@ public class Pagina extends javax.swing.JFrame {
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
     private javax.swing.JButton jButton6;
+    private javax.swing.JButton jButton7;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

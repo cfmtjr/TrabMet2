@@ -18,7 +18,12 @@ public class MetodoDePassoVariavel implements Runnable{
     BigDecimal h;
     Pagina pagina;
     boolean log;
+    private boolean FLAG = false;
 
+    public void setFLAG(boolean FLAG) {
+        this.FLAG = FLAG;
+    }
+    
         /**
      * Construtor do Método de passo variável de Runge-Kutta-Fehlberg com log 
      * configurável
@@ -50,7 +55,7 @@ public class MetodoDePassoVariavel implements Runnable{
     
     private final void calcula(){
         
-        boolean FLAG = true;
+        FLAG = true;
         BigDecimal t,w,r,sigma,
                    k1,k2,k3,k4,k5,k6;
         
@@ -61,7 +66,7 @@ public class MetodoDePassoVariavel implements Runnable{
         w=alfa;
                 
         //SAIDA(t,w)
-        resposta.add(new Ponto<>(t,w,BigDecimal.ZERO));        
+        resposta.add(new Ponto<>(t,w,BigDecimal.ZERO));    
         if(log)
             pagina.log("Iniciando Método com: Hinicial="+h+"; Hmin="+hmin+"; Hmax="+hmax);
         //Passo 2:
@@ -154,14 +159,15 @@ public class MetodoDePassoVariavel implements Runnable{
             }        
         }
         //Passo 12:
-        pagina.setPontos(resposta);
-        
+        //pagina.setPontos(resposta);
         pagina.log("Método terminado.");
+        pagina.log("\n" + resposta.size() + " pontos calculados.");
     }
 
     @Override
     public void run() {
         calcula();
+        pagina.terminarExecucao();
     }
     
     
