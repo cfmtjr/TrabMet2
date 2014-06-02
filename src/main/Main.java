@@ -1,18 +1,6 @@
 package main;
 
 import PacoteGrafico.Pagina;
-import com.panayotis.gnuplot.JavaPlot;
-import com.panayotis.gnuplot.plot.AbstractPlot;
-import com.panayotis.gnuplot.style.PlotStyle;
-import com.panayotis.gnuplot.style.Style;
-import java.math.BigDecimal;
-import java.util.LinkedList;
-import java.util.List;
-import metodopassovariavel.IFuncao;
-import metodopassovariavel.MetodoDePassoVariavel;
-import metodopassovariavel.Ponto;
-import metodopassovariavel.ResultSet;
-
 
 public class Main {
 

@@ -87,7 +87,7 @@ public class MetodoDePassoVariavel implements Runnable{
             //Passo 5: r<=TOL            
             if(r.compareTo(TOL)<=0){
                 if(log)
-                    pagina.log("Aproximação de H aceita; H="+h);
+                    pagina.log("Aproximação de H aceita; H="+h.toEngineeringString());
                 //Passo 6: Aproximação aceita
                 t = t.add(h);
                 w=calculador.W(h, w, k1, k3, k4, k5);
