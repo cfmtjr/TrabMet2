@@ -4,12 +4,14 @@
  */
 package PacoteGrafico;
 
+import com.panayotis.gnuplot.GNUPlotException;
 import com.panayotis.gnuplot.JavaPlot;
 import com.panayotis.gnuplot.plot.AbstractPlot;
 import com.panayotis.gnuplot.style.PlotStyle;
 import com.panayotis.gnuplot.style.Style;
 import java.awt.event.AdjustmentEvent;
 import java.awt.event.AdjustmentListener;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.LinkedList;
 import java.util.List;
@@ -34,7 +36,7 @@ public class Pagina extends javax.swing.JFrame {
     private List<Ponto> pontos;
     private MetodoDePassoVariavel metodo;
     private Thread t;
-    private static String path = "";
+    private static String path;
 
     public Pagina() {
         funcao = new Exemplo1();
@@ -317,15 +319,14 @@ public class Pagina extends javax.swing.JFrame {
 
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        if(!System.getProperty("os.name").equals("Linux") && path == null){
+        if(System.getProperty("os.name").contains("Windows") && path == null){
             path = JOptionPane.showInputDialog(null, "Favor informar o caminho"
                     + " do executável wgnuplot.exe: ", "Caminho do executável", JOptionPane.PLAIN_MESSAGE);
-            
         }
         if(path != null)
             if(!path.equals(""))
                 jButton8.setEnabled(true);
-        if((!System.getProperty("os.name").equals("Linux") && jButton8.isEnabled()) ||
+        if((System.getProperty("os.name").contains("Windows") && jButton8.isEnabled()) ||
                 (System.getProperty("os.name").equals("Linux"))){
             ResultSet result = new ResultSet(pontos);
             if(t != null){
@@ -385,12 +386,25 @@ public class Pagina extends javax.swing.JFrame {
                 path = temp;
     }//GEN-LAST:event_jButton8ActionPerformed
 
-    public static void plot(ResultSet result) {
-        JavaPlot p;
-        if(System.getProperty("os.name").equals("Linux"))
+    public static void plot(ResultSet result){
+        JavaPlot p = null;
+        boolean caminhoErrado;
+        if(System.getProperty("os.name").contains("Windows")){
+            do{
+                try{
+                    p = new JavaPlot(path);
+                    caminhoErrado = false;
+                } catch (GNUPlotException e) {
+                        path = JOptionPane.showInputDialog(null, "Executável não encontrado, informe o caminho correto para o executável: ",
+                                "Executável não encontrado", JOptionPane.ERROR_MESSAGE);
+                        if(path == null)
+                            return;
+                        caminhoErrado = true;
+                }
+            } while (caminhoErrado);
+        } else {
             p = new JavaPlot();
-        else
-            p = new JavaPlot(path);
+        }
         p.addPlot(result);
         PlotStyle stl = ((AbstractPlot) p.getPlots().get(0)).getPlotStyle();
         stl.setStyle(Style.LINESPOINTS);
