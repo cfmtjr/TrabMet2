@@ -1,5 +1,12 @@
 package metodopassovariavel;
 
+/**
+ *
+ * @author Alessandro Campello Silva,<p>
+ * Carlos Filipe M. Teixeira Jr.,<p>
+ * Thadeu José Caldas Neves,<p>
+ * Tomas M.G. de Siqueira.
+ */
 public class Ponto<T> {
     
     private T t;

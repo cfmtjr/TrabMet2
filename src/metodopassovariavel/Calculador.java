@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package metodopassovariavel;
 
 import java.math.BigDecimal;
@@ -9,7 +5,10 @@ import java.math.MathContext;
 
 /**
  *
- * @author Administrador
+ * @author Alessandro Campello Silva,<p>
+ * Carlos Filipe M. Teixeira Jr.,<p>
+ * Thadeu José Caldas Neves,<p>
+ * Tomas M.G. de Siqueira.
  */
  class Calculador {
     

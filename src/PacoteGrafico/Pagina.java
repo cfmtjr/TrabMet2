@@ -11,7 +11,6 @@ import com.panayotis.gnuplot.style.PlotStyle;
 import com.panayotis.gnuplot.style.Style;
 import java.awt.event.AdjustmentEvent;
 import java.awt.event.AdjustmentListener;
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.LinkedList;
 import java.util.List;
@@ -28,7 +27,10 @@ import metodopassovariavel.ResultSet;
 
 /**
  *
- * @author Administrador
+ * @author Alessandro Campello Silva,<p>
+ * Carlos Filipe M. Teixeira Jr.,<p>
+ * Thadeu José Caldas Neves,<p>
+ * Tomas M.G. de Siqueira.
  */
 public class Pagina extends javax.swing.JFrame {
 

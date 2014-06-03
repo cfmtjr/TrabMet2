@@ -1,14 +1,13 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package metodopassovariavel;
 
 import java.math.BigDecimal;
 
 /**
  *
- * @author Administrador
+ * @author Alessandro Campello Silva,<p>
+ * Carlos Filipe M. Teixeira Jr.,<p>
+ * Thadeu José Caldas Neves,<p>
+ * Tomas M.G. de Siqueira.
  */
 public interface IFuncao {
     public BigDecimal calcula(BigDecimal x, BigDecimal y);    

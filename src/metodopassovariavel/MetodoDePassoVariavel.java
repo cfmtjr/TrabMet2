@@ -4,6 +4,13 @@ import PacoteGrafico.Pagina;
 import java.math.BigDecimal;
 import java.util.List;
 
+/**
+ *
+ * @author Alessandro Campello Silva,<p>
+ * Carlos Filipe M. Teixeira Jr.,<p>
+ * Thadeu José Caldas Neves,<p>
+ * Tomas M.G. de Siqueira.
+ */
 public class MetodoDePassoVariavel implements Runnable{
 
     private IFuncao funcao;

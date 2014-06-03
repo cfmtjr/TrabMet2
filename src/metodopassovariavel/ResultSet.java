@@ -1,9 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package metodopassovariavel;
 
 import com.panayotis.gnuplot.dataset.DataSet;
@@ -12,7 +6,10 @@ import java.util.List;
 
 /**
  *
- * @author cfmtjr
+ * @author Alessandro Campello Silva,<p>
+ * Carlos Filipe M. Teixeira Jr.,<p>
+ * Thadeu José Caldas Neves,<p>
+ * Tomas M.G. de Siqueira.
  */
 public class ResultSet implements DataSet{
 

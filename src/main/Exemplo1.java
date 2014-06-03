@@ -1,13 +1,15 @@
 package main;
 
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import metodopassovariavel.IFuncao;
 
 /**
- * @author Thadeu Jose
+ *
+ * @author Alessandro Campello Silva,<p>
+ * Carlos Filipe M. Teixeira Jr.,<p>
+ * Thadeu José Caldas Neves,<p>
+ * Tomas M.G. de Siqueira.
  */
-
 public  class Exemplo1 implements IFuncao{
 
     @Override
