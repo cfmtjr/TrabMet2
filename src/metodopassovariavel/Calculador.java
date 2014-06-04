@@ -140,7 +140,7 @@ import java.math.MathContext;
      *                      - K4*(2197/75240) + K5*(1/50) 
      *                      - K6*(2/55) |
      * obs. |x| é módulo de x
-     * @param h
+     * @param h 
      * @param K1
      * @param K3
      * @param K4

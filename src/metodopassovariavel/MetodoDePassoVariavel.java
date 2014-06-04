@@ -2,6 +2,7 @@ package metodopassovariavel;
 
 import PacoteGrafico.Pagina;
 import java.math.BigDecimal;
+import java.math.MathContext;
 import java.util.List;
 
 /**
@@ -15,6 +16,7 @@ public class MetodoDePassoVariavel implements Runnable{
 
     private IFuncao funcao;
     private Calculador calculador;
+    private MathContext mc;
     List<Ponto> resposta;
     BigDecimal a;
     BigDecimal b;
@@ -58,6 +60,7 @@ public class MetodoDePassoVariavel implements Runnable{
         this.h = h;
         this.pagina = pagina;
         this.log = log;
+        this.mc = new MathContext(20);
     }
     
     private final void calcula(){
@@ -98,7 +101,9 @@ public class MetodoDePassoVariavel implements Runnable{
                 //Passo 6: Aproximação aceita
                 t = t.add(h);
                 w=calculador.W(h, w, k1, k3, k4, k5);
-                
+                w=w.round(mc); 
+                t=t.round(mc);
+                h=h.round(mc);
                 if(log){
                     pagina.log("T="+t);
                     pagina.log("W="+w);

@@ -3,7 +3,7 @@ package main;
 import PacoteGrafico.Pagina;
 
 /**
- *
+ * 
  * @author Alessandro Campello Silva,<p>
  * Carlos Filipe M. Teixeira Jr.,<p>
  * Thadeu José Caldas Neves,<p>
