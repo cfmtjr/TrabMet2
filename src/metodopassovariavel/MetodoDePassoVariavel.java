@@ -33,7 +33,7 @@ public class MetodoDePassoVariavel implements Runnable{
         this.FLAG = FLAG;
     }
     
-        /**
+     /**
      * Construtor do Método de passo variável de Runge-Kutta-Fehlberg com log 
      * configurável
      * @param funcao A função a ser calculada
@@ -45,7 +45,7 @@ public class MetodoDePassoVariavel implements Runnable{
      * @param hmax Tamanho máximo de passo
      * @param hmin Tamanho mínimo de passo
      * @param pagina Página em que o método será executado
-     * @param log Variável booleana para definir se o métododeverá usar log ou não
+     * @param log Variável booleana para definir se o método deverá usar log ou não
      */
     public MetodoDePassoVariavel(IFuncao funcao, List<Ponto> resposta,BigDecimal a,BigDecimal b,BigDecimal alfa,BigDecimal TOL,BigDecimal hmax,BigDecimal hmin, BigDecimal h, Pagina pagina, boolean log) {
         this.funcao = funcao;               
