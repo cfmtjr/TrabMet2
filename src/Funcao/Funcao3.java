@@ -12,6 +12,18 @@ import metodopassovariavel.IFuncao;
  */
 public class Funcao3 implements IFuncao{
  
+    private static Funcao3 instance;
+    
+    private Funcao3(){
+        
+    }
+    
+    public static Funcao3 getInstance(){
+        if(instance == null)
+            instance = new Funcao3();
+        return instance;
+    }
+    
     @Override
     public BigDecimal calcula(BigDecimal x, BigDecimal y) {
         //sin(x^2)

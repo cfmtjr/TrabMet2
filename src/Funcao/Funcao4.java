@@ -12,14 +12,26 @@ import metodopassovariavel.IFuncao;
  */
 public class Funcao4 implements IFuncao{
 
-    int gama;
+    static int gama;
 
-    public Funcao4() {
-        this(-100);        
+    private static Funcao4 instance;
+    
+    private Funcao4(){
+        gama = -100;
     }
-
-    public Funcao4(int gama) {
-        this.gama = gama;
+    
+    public static Funcao4 getInstance(){
+        if(instance == null)
+            instance = new Funcao4();
+        return instance;
+    }
+    
+    public static void setGama(int g){
+        gama = g;
+    }
+    
+    public static int getGama(){
+        return gama;
     }
 
     @Override
@@ -29,7 +41,7 @@ public class Funcao4 implements IFuncao{
 
     @Override
     public String toString() {
-        return "gama*y";                
+        return gama + "*y";                
     }
     
 }

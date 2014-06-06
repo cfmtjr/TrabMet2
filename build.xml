@@ -69,5 +69,14 @@
     properties which you can use, check the target you are overriding in the
     nbproject/build-impl.xml file. 
 
-    -->
+    -->    
+    <target name="-post-jar">
+      <jar jarfile="dist/Runge-Kutta-Fehlberg.jar">
+        <zipfileset src="${dist.jar}" excludes="META-INF/*" />
+        <zipfileset src="lib/JavaPlot.jar" excludes="META-INF/*" />
+        <manifest>
+            <attribute name="Main-Class" value="main.Main"/>
+        </manifest>
+      </jar>
+    </target>
 </project>
