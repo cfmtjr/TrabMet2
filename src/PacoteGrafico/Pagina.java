@@ -622,12 +622,11 @@ public class Pagina extends javax.swing.JFrame {
     }//GEN-LAST:event_jComboBox1ItemStateChanged
 
     private void jButton12btnPararActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton12btnPararActionPerformed
-        File f;
-        String workspace = System.getProperty("user.dir");
+        File f = new File(Pagina.class.getProtectionDomain().getCodeSource().getLocation().getPath());
         if(System.getProperty("os.name").contains("Windows"))
-            f = new File(workspace + "\\export.csv");
+            f = new File(f.getParentFile().getPath() + "\\export.csv");
         else
-            f = new File(workspace + "/export.csv");
+            f = new File(f.getParentFile().getPath() + "/export.csv");
         
         CSVWriter csv = new CSVWriter(f);
         new Thread(csv).start();
