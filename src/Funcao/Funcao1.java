@@ -1,6 +1,7 @@
 package Funcao;
 
 import java.math.BigDecimal;
+import java.math.MathContext;
 import metodopassovariavel.IFuncao;
 
 /**
@@ -28,6 +29,12 @@ public class Funcao1 implements IFuncao{
     public BigDecimal calcula(BigDecimal x, BigDecimal y) {
         // y' = y - x^2 + 1
         return y.subtract(x.pow(2)).add(new BigDecimal(1));
+    }
+    
+    @Override
+    public BigDecimal calculaAlfa(double ini){
+        //y(x) = e^x + x^2 + 2x+1
+        return new BigDecimal((Math.exp(ini) + Math.pow(ini,2) + 2*ini + 1), new MathContext(20));
     }
     
     @Override

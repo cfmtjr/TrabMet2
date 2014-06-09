@@ -10,7 +10,8 @@ import java.math.BigDecimal;
  * Tomas M.G. de Siqueira.
  */
 public interface IFuncao {
-    public BigDecimal calcula(BigDecimal x, BigDecimal y);    
+    public BigDecimal calcula(BigDecimal x, BigDecimal y);
+    public BigDecimal calculaAlfa(double ini);
     @Override
     public String toString();
 }
