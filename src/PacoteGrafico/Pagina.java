@@ -21,14 +21,8 @@ import javax.swing.JTextArea;
 import javax.swing.text.DefaultCaret;
 import Funcao.*;
 import Utils.CSVWriter;
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.net.URISyntaxException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.swing.JPanel;
 import metodopassovariavel.IFuncao;
 import metodopassovariavel.MetodoDePassoVariavel;
 import metodopassovariavel.Ponto;
@@ -118,6 +112,9 @@ public class Pagina extends javax.swing.JFrame {
         Double valorTOL = Double.valueOf(jtfTOL.getText());
         BigDecimal TOL = BigDecimal.valueOf(valorTOL);
         BigDecimal alfa = funcao.calculaAlfa(valorInicio);
+        
+        if(alfa == null)
+            return;
         
         pontos = new LinkedList<>();
 

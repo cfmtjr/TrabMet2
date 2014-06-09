@@ -2,6 +2,7 @@ package Funcao;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
+import javax.swing.JOptionPane;
 import metodopassovariavel.IFuncao;
 import org.apache.commons.math3.special.Gamma;
 
@@ -45,10 +46,20 @@ public class Funcao2 implements IFuncao {
     @Override
     public BigDecimal calculaAlfa(double ini) {
         //y(x) = e^(x^5/5)-(e^(x^5/5) x^4 Gamma(4/5, x^5/5))/(5^(1/5) (x^5)^(4/5))
-        double pow = Math.pow(ini, 5)/5;
-        double exp = Math.exp(pow);
-        double gamma = Gamma.regularizedGammaQ(0.8, pow)*Gamma.gamma(0.8);
-        double ans = exp - (exp*Math.pow(ini, 4)* gamma)/(Math.pow(5, 0.2)*Math.pow(Math.pow(ini, 5),0.8));
-        return new BigDecimal(ans, new MathContext(20));
+        if(ini == 0){
+            JOptionPane.showMessageDialog(null, "O valor da função é indeterminado no ponto 0",  "Valor indeterminado", JOptionPane.ERROR_MESSAGE);
+            return null;
+        } else if (ini < 0) {
+            JOptionPane.showMessageDialog(null, "O valor da função em um ponto negativo é um valor complexo."
+                    + "\nValores complexos não são tratados por essa aplicação."
+                    + "\nEscolha um valor positivo.", "Valor complexo", JOptionPane.ERROR_MESSAGE);
+            return null;
+        } else {
+            double pow = Math.pow(ini, 5)/5;
+            double exp = Math.exp(pow);
+            double gamma = Gamma.regularizedGammaQ(0.8, pow)*Gamma.gamma(0.8);
+            double ans = exp - (exp*Math.pow(ini, 4)* gamma)/(Math.pow(5, 0.2)*Math.pow(Math.pow(ini, 5),0.8));
+            return new BigDecimal(ans, new MathContext(20));
+        }
     }
 }
