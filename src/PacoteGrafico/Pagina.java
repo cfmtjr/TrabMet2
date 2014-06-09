@@ -649,9 +649,7 @@ public class Pagina extends javax.swing.JFrame {
                 f = new File(f.getParentFile().getAbsolutePath() + "/export.csv");
             CSVWriter csv = new CSVWriter(f);
             new Thread(csv).start();
-        } catch (URISyntaxException ex) {
-            Logger.getLogger(Pagina.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        } catch (URISyntaxException ex) {}
     }//GEN-LAST:event_jButton12btnPararActionPerformed
 
     private void jCheckBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox1ActionPerformed
@@ -667,23 +665,30 @@ public class Pagina extends javax.swing.JFrame {
     }//GEN-LAST:event_jtfTOLActionPerformed
 
     public static void plot(ResultSet result){
-        JavaPlot p = null;
-        boolean caminhoErrado;
+        JavaPlot p;
+        File f;
         if(System.getProperty("os.name").contains("Windows")){
-            do{
-                try{
-                    p = new JavaPlot(path);
-                    caminhoErrado = false;
-                } catch (GNUPlotException e) {
-                        path = JOptionPane.showInputDialog(null, "Executável não encontrado, informe o caminho correto para o executável: ",
-                                "Executável não encontrado", JOptionPane.ERROR_MESSAGE);
-                        if(path == null)
-                            return;
-                        caminhoErrado = true;
-                }
-            } while (caminhoErrado);
+            try {
+                f = new File(Pagina.class.getProtectionDomain().getCodeSource().getLocation().toURI());
+                path = f.getParentFile().getAbsolutePath() + "\\gnuplot\\bin\\wgnuplot.exe";
+            } catch (URISyntaxException ex) {}
+            try {
+                p = new JavaPlot(path);
+            } catch (GNUPlotException e) {
+                JOptionPane.showMessageDialog(null, "GNUPlot não encontrado, extraia a pasta do GNUPlot "
+                        + "na mesma pasta deste executável para poder plotar o gráfico", "GNUPlot não encontrado", 
+                        JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            
         } else {
-            p = new JavaPlot();
+            try{
+                p = new JavaPlot();
+            } catch (GNUPlotException e) {
+                JOptionPane.showMessageDialog(null, "GNUPlot não encontrado, favor instalar para poder "
+                        + "plotar o gráfico", "GNUPlot não encontrado", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
         }
         p.addPlot(result);
         PlotStyle stl = ((AbstractPlot) p.getPlots().get(0)).getPlotStyle();
