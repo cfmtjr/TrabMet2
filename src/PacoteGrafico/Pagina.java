@@ -491,22 +491,12 @@ public class Pagina extends javax.swing.JFrame {
 
 
     private void btnGeraGrafActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGeraGrafActionPerformed
-        if(System.getProperty("os.name").contains("Windows") && path == null){
-            path = JOptionPane.showInputDialog(null, "Favor informar o caminho"
-                    + " do executável wgnuplot.exe: ", "Caminho do executável", JOptionPane.PLAIN_MESSAGE);
-        }
-        if(path != null)
-            if(!path.equals(""))
-                jButton8.setEnabled(true);
-        if((System.getProperty("os.name").contains("Windows") && jButton8.isEnabled()) ||
-                (System.getProperty("os.name").equals("Linux"))){
-            ResultSet result = new ResultSet(pontos);
-            if(t != null){
-                plot(result);
-            } else {
-                mostrarErro("Não existem pontos a serem plotados.\n"
-                        + "Execute o método para obter os resultados.", "Resultados não detectados");
-            }
+        ResultSet result = new ResultSet(pontos);
+        if(t != null){
+            plot(result);
+        } else {
+            mostrarErro("Não existem pontos a serem plotados.\n"
+                    + "Execute o método para obter os resultados.", "Resultados não detectados");
         }
     }//GEN-LAST:event_btnGeraGrafActionPerformed
 
@@ -679,8 +669,7 @@ public class Pagina extends javax.swing.JFrame {
                         + "na mesma pasta deste executável para poder plotar o gráfico", "GNUPlot não encontrado", 
                         JOptionPane.ERROR_MESSAGE);
                 return;
-            }
-            
+            } 
         } else {
             try{
                 p = new JavaPlot();
